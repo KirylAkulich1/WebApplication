@@ -1,0 +1,281 @@
+﻿<nav id="sidebar">
+    <div class="sidebar-header">
+        <h3>File Archive</h3>
+    </div>
+    <form id="uploadform" asp-action="AddFile" asp-controller="Home" method="post" enctype="multipart/form-data">
+        <input id="buttonupload" type="file" name="uploadedFile" size="chars" multiple onchange="submitForm('uploadform');">
+    </form>
+    <button id="upload-btn" onclick="thisFileUpload;">Choose File</button>
+    <ul class="list-unstyled components">
+       
+
+        <li class="active">
+            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
+            <ul class="collapse list-unstyled" id="homeSubmenu">
+                <li>
+                    <a href="#">@GetCurrentUserName()</a>
+                </li>
+                <li>
+                    <a href="#">Home 2</a>
+                </li>
+                <li>
+                    <a href="#">Home 3</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">About</a>
+        </li>
+        <li>
+            <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
+            <ul class="collapse list-unstyled" id="pageSubmenu">
+                <li>
+                    <a href="#">@GetCurrentUserName()</a>
+                </li>
+                <li>
+                    <a href="#">Page 2</a>
+                </li>
+                <li>
+                    <a href="#">Page 3</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">Portfolio</a>
+        </li>
+        <li>
+            <a href="#">Contact</a>
+        </li>
+    </ul>
+
+    <ul class="list-unstyled CTAs">
+        <li>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                Create Folder
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input @bind-value="FolderName" @bind-value:event="oninput" />
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" @onclick="addFolder" @onclick:preventDefault>Save folder</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <a href="https://bootstrapious.com/p/bootstrap-sidebar" class="article">Back to article</a>
+        </li>
+    </ul>
+</nav>
+
+
+<div id="content">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+
+            <button type="button" id="sidebarCollapse" class="btn btn-info">
+                <span>Toggle Sidebar</span>
+            </button>
+            <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-align-justify"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Page</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Page</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="row">
+        <div class="col-12">
+            <h6 class="text-muted">List Group</h6>
+            <ul class="list-group">
+                
+          @foreach (var file in GetFiles())
+          {
+                <li class="list-group-item">
+
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    @if (file.Type == FileType.Folder)
+                    {
+                        <i class="fa fa-folder"></i>
+                        <a @onclick="@(e =>FolderClicked(file.Name))">@file.Name</a>
+                    }
+                    else
+                    {
+                        <i class="fa fa-file"></i>
+                        <a>@file.Name</a>
+                    }
+
+                    <!--<div class="pull-right">
+        <i id="trash" class="fa fa-pencil"></i>
+        <i id="flag" class="fa fa-trash"></i>
+        <i class="fa fa-flag"></i>
+    </div>-->
+                </li>
+          }
+            </ul>
+            <form>
+
+                <label>Upload Your File </label>
+                <!--
+                         <div class="form-group files">
+                </div><div type="file" class="form-control">
+         <InputFile @bind="uploadedFile"></InputFile>
+
+    </div>-->
+
+
+                <InputFile OnChange="HandleFileSelected"></InputFile>
+
+
+                <button type="submit" @onclick="onFileIploaded">Submit</button>
+            </form>
+        </div>
+       
+    </div>
+   
+</div>
+@code{
+
+    [Inject]
+    DataContext dataContext { get; set; }
+    [Inject]
+    IWebHostEnvironment _appEnviroment { get; set; }
+    [Inject]
+    private IHttpContextAccessor httpContextAccessor { get; set; } = default!;
+    [Inject]
+    private ApplicationDbContext dbContext { get; set; }
+    [Inject]
+    UserManager<IdentityUser> userManager { get; set; }
+    [Inject]
+    SignInManager<IdentityUser> signInManager { get; set; }
+
+    string currentUserName { get; set; }
+    string currentPath { get; set; } = "/";
+    string currentfolder { get; set; } = "";
+    public IFileListEntry[] uploadedFile { get; set; }
+    public string FolderName{ get; set; }
+    async Task  HandleFileSelected(IFileListEntry[] files)
+    {
+        uploadedFile = files;
+        if (uploadedFile != null)
+        {
+            Console.WriteLine("File Add");
+            string UserName = httpContextAccessor.HttpContext.User.Identity.Name;
+            string path = "/Files/" + UserName;
+
+            if (!Directory.Exists(_appEnviroment.WebRootPath + path))
+                Directory.CreateDirectory(_appEnviroment.WebRootPath + path);
+
+            using (var fileStream = new FileStream(_appEnviroment.WebRootPath + path + "/" + uploadedFile[0].Name, FileMode.Create))
+            {
+                Console.WriteLine("File was Added0");
+                await uploadedFile.FirstOrDefault().Data.CopyToAsync(fileStream);
+                Console.WriteLine("File was Added1");
+                dataContext.Files.Add(new FileModel
+                {
+                    Name = uploadedFile[0].Name,
+                    Type = FileType.File,
+                    Path = currentPath,
+                    //UserName= httpContextAccessor.HttpContext.User.Identity.Name
+                }) ;
+                dataContext.SaveChanges();
+            }
+
+        }
+    }
+
+    public async Task onFileIploaded(MouseEventArgs e)
+    {
+        Console.WriteLine(uploadedFile);
+        if (uploadedFile != null)
+        {
+            Console.WriteLine("File Add");
+            string UserName = httpContextAccessor.HttpContext.User.Identity.Name;
+            string path = "/Files/" + UserName;
+
+            if (!Directory.Exists(_appEnviroment.WebRootPath + path))
+                Directory.CreateDirectory(_appEnviroment.WebRootPath + path);
+
+            using (var fileStream = new FileStream(_appEnviroment.WebRootPath + path+"/"+uploadedFile[0].Name, FileMode.Create))
+            {
+                Console.WriteLine("File was Added0");
+                await uploadedFile.FirstOrDefault().Data.CopyToAsync(fileStream);
+                Console.WriteLine("File was Added1");
+                // dataContext.Files.Add(new FileModel
+                //{
+                //   Name = uploadedFile[0].Name,
+                //  Type = FileType.File,
+                // Path = currentPath,
+                //User = await dbContext.Users.FirstOrDefaultAsync(u=> u.UserName==httpContextAccessor.HttpContext.User.Identity.Name)
+                //}) ;
+                Console.WriteLine("File was Added");
+                dataContext.SaveChanges();
+                Console.WriteLine("File was Added");
+            }
+
+        }
+
+    }
+    public IEnumerable<FileModel> GetFiles()
+    {
+        return dataContext.Files.Where(file =>currentPath==file.Path );
+    }
+    public string GetCurrentUserName()
+    {
+        return httpContextAccessor.HttpContext.User.Identity.Name;
+    }
+    public void addFolder()
+    {
+        if (FolderName!=null)
+        {
+            string UserName = httpContextAccessor.HttpContext.User.Identity.Name;
+            string path = "/Files/" + UserName;
+            if (Directory.Exists(path + "/" + FolderName))
+                return;
+            dataContext.Files.Add(new FileModel
+            {
+                Name = FolderName,
+                Type = FileType.Folder,
+                Path = currentPath,
+               // UserName = httpContextAccessor.HttpContext.User.Identity.Name
+            });
+            dataContext.SaveChanges();
+        }
+    }
+    public void FolderClicked(string filename)
+    {
+        currentfolder = filename;
+        currentPath += "/" + filename;
+    }
+
+}

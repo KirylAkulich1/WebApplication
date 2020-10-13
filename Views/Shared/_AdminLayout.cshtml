@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <!-- FONTAWESOME STYLES-->
+   
+    <!-- CUSTOM STYLES-->
+    <link href="~/css/admin/custom.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <link href="~/css/admin/bootstrap.css" rel="stylesheet" />
+</head>
+<body>
+   
+        <div id="wrapper">
+            <div class="navbar navbar-inverse navbar-fixed-top">
+                <div class="adjust-nav">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">
+                            <img src="assets/img/logo.png" />
+
+                        </a>
+
+                    </div>
+
+                    <span class="logout-spn">
+                        <a href="#" style="color:#fff;">LOGOUT</a>
+
+                    </span>
+                </div>
+            </div>
+            <!-- /. NAV TOP  -->
+            <nav class="navbar-default navbar-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav" id="main-menu">
+
+
+
+                        <li class="active-link">
+                            <a href="index.html"><i class="fa fa-desktop "></i>Dashboard <span class="badge">Included</span></a>
+                        </li>
+
+
+                        <li>
+                            <a href="ui.html"><i class="fa fa-table "></i>UI Elements  <span class="badge">Included</span></a>
+                        </li>
+                        <li>
+                            <a href="blank.html"><i class="fa fa-edit "></i>Blank Page  <span class="badge">Included</span></a>
+                        </li>
+
+
+                        <li>
+                            <a href="#"><i class="fa fa-qrcode "></i>My Link One</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart-o"></i>My Link Two</a>
+                        </li>
+
+                        <li>
+                            <a href="#"><i class="fa fa-edit "></i>My Link Three </a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-table "></i>My Link Four</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-edit "></i>My Link Five </a>
+                        </li>
+
+                    </ul>
+                </div>
+
+            </nav>
+            @RenderBody()
+        </div>
+        <script src="~/js/admin/custom.js"></script>
+        <!-- BOOTSTRAP SCRIPTS -->
+        <!-- CUSTOM SCRIPTS -->
+        <script src="~/js/admin/jquery-1.10.2.js"></script>
+</body>
+</html>

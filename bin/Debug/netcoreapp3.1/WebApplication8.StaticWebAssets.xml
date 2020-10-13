@@ -1,0 +1,4 @@
+﻿<StaticWebAssets Version="1.0">
+  <ContentRoot BasePath="/Identity" Path="C:\Users\Y\.nuget\packages\microsoft.aspnetcore.identity.ui\3.1.6\staticwebassets\V4\" />
+  <ContentRoot BasePath="_content/BlazorInputFile" Path="C:\Users\Y\.nuget\packages\blazorinputfile\0.2.0\build\..\staticwebassets\" />
+</StaticWebAssets>
