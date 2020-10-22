@@ -60,6 +60,9 @@ namespace WebApplication8.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("SharedFolderId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -68,7 +71,57 @@ namespace WebApplication8.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SharedFolderId");
+
                     b.ToTable("IdentityUser");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.AddRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("FolderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FromId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ToId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FolderId");
+
+                    b.HasIndex("FromId");
+
+                    b.HasIndex("ToId");
+
+                    b.ToTable("AddRequests");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.AllowedFolder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("From")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("To")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AllowedFolders");
                 });
 
             modelBuilder.Entity("WebApplication8.Models.FileModel", b =>
@@ -131,6 +184,51 @@ namespace WebApplication8.Migrations
                     b.ToTable("Reports");
                 });
 
+            modelBuilder.Entity("WebApplication8.Models.SharedFolder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("FolderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SharedPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FolderId");
+
+                    b.ToTable("SharedFolders");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.HasOne("WebApplication8.Models.SharedFolder", null)
+                        .WithMany("Users")
+                        .HasForeignKey("SharedFolderId");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.AddRequest", b =>
+                {
+                    b.HasOne("WebApplication8.Models.SharedFolder", "Folder")
+                        .WithMany()
+                        .HasForeignKey("FolderId");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "From")
+                        .WithMany()
+                        .HasForeignKey("FromId");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "To")
+                        .WithMany()
+                        .HasForeignKey("ToId");
+                });
+
             modelBuilder.Entity("WebApplication8.Models.FileModel", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
@@ -147,6 +245,13 @@ namespace WebApplication8.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
                         .WithMany()
                         .HasForeignKey("IdentityUserId");
+                });
+
+            modelBuilder.Entity("WebApplication8.Models.SharedFolder", b =>
+                {
+                    b.HasOne("WebApplication8.Models.FileModel", "Folder")
+                        .WithMany()
+                        .HasForeignKey("FolderId");
                 });
 #pragma warning restore 612, 618
         }

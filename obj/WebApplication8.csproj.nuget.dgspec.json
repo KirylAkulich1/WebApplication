@@ -42,6 +42,10 @@
               "target": "Package",
               "version": "[0.2.0, )"
             },
+            "MailKit": {
+              "target": "Package",
+              "version": "[2.9.0, )"
+            },
             "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
               "target": "Package",
               "version": "[3.1.8, )"
@@ -79,6 +83,18 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[3.1.4, )"
+            },
+            "Microsoft.jQuery.Unobtrusive.Ajax": {
+              "target": "Package",
+              "version": "[3.2.6, )"
+            },
+            "MimeKit": {
+              "target": "Package",
+              "version": "[2.9.2, )"
+            },
+            "jQuery": {
+              "target": "Package",
+              "version": "[3.5.1, )"
             }
           },
           "imports": [

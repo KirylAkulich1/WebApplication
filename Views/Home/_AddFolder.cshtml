@@ -1,7 +1,9 @@
-﻿<ul class="list-unstyled CTAs">
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+<ul class="list-unstyled CTAs">
     <li>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-            Create Folder
+           @Localizer["CreateFolder"]
         </button>
 
         <!-- Modal -->
@@ -17,12 +19,12 @@
                     <div class="modal-body">
                         <form id="FolderName" asp-controller="Home" asp-action="CreateFolder">
                             <input name="folderpath" value=@ViewBag.CurrentPath hidden />
-                            <input placeholder="Foder name" name="foldername"/>
-                            <input type="submit" class="btn btn-primary"/>
+                            <input placeholder="Foder name" name="foldername" />
+                            <input type="submit" class="btn btn-primary" />
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" >Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary" data-dismiss="modal" asp-action="submitfolderform" form="FolderName">Save folder</button>
                     </div>
                 </div>

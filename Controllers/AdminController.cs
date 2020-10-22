@@ -9,14 +9,29 @@ namespace WebApplication8.Controllers
 {
     public class AdminController : Controller
     {
-        
-        public AdminController()
+        private readonly DataContext _context;
+        private readonly ApplicationDbContext _userctx;
+        public AdminController(DataContext context,ApplicationDbContext usercontext)
         {
-
+            _context = context;
+            _userctx = usercontext;
         }
         public IActionResult Index()
         {
             return View();
+        }
+        public IActionResult Blank()
+        {
+            return View();
+        }
+        public IActionResult Report()
+        {
+            return View();
+        }
+        public IActionResult Reports(int id)
+        {
+
+            return View(_context.Reports);
         }
     }
 }

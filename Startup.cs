@@ -13,6 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Http;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using WebApplication8.Models.Mails;
 
 namespace WebApplication8
 {
@@ -37,11 +40,16 @@ namespace WebApplication8
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
            
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddViewLocalization();
             services.AddRazorPages();
             services.AddHttpContextAccessor();
             services.AddServerSideBlazor();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            var MailMetadata = Configuration.GetSection("MailMatadata").Get<MailMetaData>();
+            services.AddSingleton(MailMetadata);
+          
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +66,25 @@ namespace WebApplication8
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            var supportedCultures = new[]
+            {
+                new CultureInfo("en-US"),
+                new CultureInfo("en-GB"),
+                new CultureInfo("en"),
+                new CultureInfo("ru-RU"),
+                new CultureInfo("ru"),
+                new CultureInfo("de-DE"),
+                new CultureInfo("de")
+            };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("ru-RU"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+
             app.UseHttpsRedirection();
+            
             app.UseStaticFiles();
 
             app.UseRouting();

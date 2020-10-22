@@ -1,77 +1,18 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 }
-@model IEnumerable<FileModel> 
+@model IEnumerable<FileModel>
+
     <div class="panel-body">
-        <ul class="list-group">
-            @foreach (var file in Model)
-            {
 
-            <li class="list-group-item">
-                <div class="checkbox">
-                    <input type="checkbox" id="checkbox" />
-                    @if (file.Type == FileType.Folder)
-                    {
-                        <i class="fa fa-folder"></i>
-                        <partial name="_RefPartial" model="file" /> <h6>             @file.Path</h6>
-
-                    }
-                    else
-                    {
-                        <i class="fa fa-file"></i>
-                        <a>@file.Name</a>
-                        <a>@file.Path</a>
-                    }
-                </div>
-                <div class="pull-right">
-                    <i id="trash" class="fa fa-pencil"></i>
-                    <i id="flag" class="fa fa-trash"></i>
-                    <i class="fa fa-flag"></i>
-
-                    <!-- Модальное окно -->
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                        <i class="fa fa-ban"></i>
-                    </button>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <form asp-controller="Home" asp-action="PostReport">
-                                        <input name="Path" value=@ViewBag.CurrentPath hidden />
-                                        <input name="FileId" value=@file.Id hidden />
-                                        <input class="form-control" type="text" placeholder="Default input" name="ReportTheme">
-                                        <div class="form-group">
-                                            <label for="exampleFormControlTextarea1">Example textarea</label>
-                                            <textarea class="form-control" id="exampleFormControlTextarea1" name="ReportBody" rows="3"></textarea>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Save changes</button>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary">Save changes</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-            }
-        </ul>
-
-
+        <form data-ajax-url="/Home/GetFiles" data-ajax="true">
+            <input value=@ViewBag.CurrentPath name="Path" hidden />
+        </form>
         <style>
-          /*  body {
+            /*  body {
                 font-family: 'Montserrat', sans-serif;
                 background: #535c68;
             }*/
@@ -139,20 +80,20 @@
             }
         </style>
         <!--
-        <div class="row">
-            <div class="col-12">
-                <h6 class="text-muted">List Group</h6>
-                <ul class="list-group">
-                    <!--
+    <div class="row">
+        <div class="col-12">
+            <h6 class="text-muted">List Group</h6>
+            <ul class="list-group">
+                <!--
 
-                            <div class="pull-right">
-                                <i id="trash" class="fa fa-pencil"></i>
-                                <i id="flag" class="fa fa-trash"></i>
-                                <i class="fa fa-flag"></i>
-                            </div>
-                        </li>
-                    }
-                </ul>-->
+                        <div class="pull-right">
+                            <i id="trash" class="fa fa-pencil"></i>
+                            <i id="flag" class="fa fa-trash"></i>
+                            <i class="fa fa-flag"></i>
+                        </div>
+                    </li>
+                }
+            </ul>-->
         <div class="file-wrapper">
             <div class="container">
                 <h1>Upload a file</h1>

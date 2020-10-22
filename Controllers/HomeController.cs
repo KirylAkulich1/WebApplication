@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 using WebApplication8.Models;
 using WebApplication8.Data;
 using Microsoft.AspNetCore.Http;
@@ -113,6 +114,18 @@ namespace WebApplication8.Controllers
             });
             _context.SaveChanges();
             return RedirectToAction("Index", new { path = Path });
+        }
+        public IActionResult MakeShared(int FileId,string Path)
+        {
+            FileModel file = _context.Files.First(file => file.Id == FileId);
+           // SharedFolder sharedFolder = new SharedFolder { Folder = file, SharedPath = Path };
+            return RedirectToAction("Index", new { path = Path });
+        }
+        [HttpGet]
+        public ActionResult GetFiles()
+        {
+            string Path = "/";
+            return PartialView("_FileListPartial", _context.Files.Where(file => file.UserName == User.Identity.Name && file.Path == Path));
         }
     }
 }

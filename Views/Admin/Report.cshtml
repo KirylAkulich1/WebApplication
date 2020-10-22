@@ -1,0 +1,10 @@
+﻿@model Report
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+
+}
+    <label for="exampleForm2">Theme : @Model.Theme</label>
+    <label for="exampleForm2">From : @Model.IdentityUser</label>
+    <label for="exampleForm2">File Owner : @Model.File.UserName</label>
+    <label>File : <a href="/">@Model.File.Name </a></label>

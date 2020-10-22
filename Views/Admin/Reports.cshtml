@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Report>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    
+
+}
+<div id="page-wrapper">
+    <div id="page-inner">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>BLANK PAGE </h2>
+            </div>
+        </div>
+        <!-- /. ROW  -->
+        <hr />
+        <ul class="list-group">
+            @foreach(var report in Model)
+            {
+                <li>
+                    <a href=@String.Concat("/Admin/Reports/?id=",report.Id)>@report.Theme </a>
+                    @report.ReportDate
+                    @report.UserName
+                </li>
+            }
+            </ul>
+            <!-- /. ROW  -->
+    </div>
+    <!-- /. PAGE INNER  -->
+</div>
+<!-- /. PAGE WRAPPER  -->
