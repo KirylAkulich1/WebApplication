@@ -7,6 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\Data\20201113095716_init12.cs" />
+    <Compile Remove="Migrations\Data\20201113095716_init12.Designer.cs" />
+    <Compile Remove="Migrations\Data\20201113100706_init6.cs" />
+    <Compile Remove="Migrations\Data\20201113100706_init6.Designer.cs" />
+    <Compile Remove="Migrations\Data\20201113101130_init7.cs" />
+    <Compile Remove="Migrations\Data\20201113101130_init7.Designer.cs" />
+    <Compile Remove="Migrations\Data\20201113101221_init8.cs" />
+    <Compile Remove="Migrations\Data\20201113101221_init8.Designer.cs" />
+    <Compile Remove="Migrations\Data\20201113101601_init9.cs" />
+    <Compile Remove="Migrations\Data\20201113101601_init9.Designer.cs" />
+    <Compile Remove="Migrations\Data\20201113101705_init10.cs" />
+    <Compile Remove="Migrations\Data\20201113101705_init10.Designer.cs" />
+    <Compile Remove="Migrations\Data\20201113122206_CustomUser.cs" />
+    <Compile Remove="Migrations\Data\20201113122206_CustomUser.Designer.cs" />
+    <Compile Remove="Migrations\Data\20201113122609_init11.cs" />
+    <Compile Remove="Migrations\Data\20201113122609_init11.Designer.cs" />
+    <Compile Remove="Migrations\Data\20201113123115_init13.cs" />
+    <Compile Remove="Migrations\Data\20201113123115_init13.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Resources\Views\Home\Index.en.res" />
   </ItemGroup>
 
@@ -14,13 +35,17 @@
     <PackageReference Include="BlazorInputFile" Version="0.2.0" />
     <PackageReference Include="jQuery" Version="3.5.1" />
     <PackageReference Include="MailKit" Version="2.9.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.10" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.6" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

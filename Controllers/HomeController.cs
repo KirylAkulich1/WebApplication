@@ -19,27 +19,26 @@ namespace WebApplication8.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly DataContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor _ctx;
         private readonly IWebHostEnvironment _appEnviroment;
-        private readonly ApplicationDbContext _userctx;
-        public HomeController(ILogger<HomeController> logger,DataContext context,
-            IHttpContextAccessor httpContextAccessor,IWebHostEnvironment appEnviroment,ApplicationDbContext userctx)
+      
+        public HomeController(ILogger<HomeController> logger,
+            IHttpContextAccessor httpContextAccessor, IWebHostEnvironment appEnviroment, ApplicationDbContext userctx)
         {
             _logger = logger;
-            _context = context;
             _ctx = httpContextAccessor;
             _appEnviroment = appEnviroment;
-            _userctx = userctx;
+            _context = userctx;
         }
 
-        public IActionResult Index(string path="/")
+        public IActionResult Index(string path = "/")
         {
             _logger.LogInformation(path);
             ViewBag.CurrentPath = path;
             TempData["path"] = path;
-         
-            return View(_context.Files.Where(file=>file.UserName==User.Identity.Name && file.Path==path));
+
+            return View(_context.Files.Where(file => file.UserName == User.Identity.Name && file.Path == path));
         }
 
         public IActionResult Privacy()
@@ -52,10 +51,10 @@ namespace WebApplication8.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-       [HttpPost]
-        public IActionResult CreateFolder(string folderpath,string foldername)
+        [HttpPost]
+        public IActionResult CreateFolder(string folderpath, string foldername)
         {
-            string fullpath = _appEnviroment.WebRootPath+"/Files/" + User.Identity.Name + folderpath;
+            string fullpath = _appEnviroment.WebRootPath + "/Files/" + User.Identity.Name + folderpath;
             string returnpath = folderpath[..];
             if (!Directory.Exists(fullpath + foldername))
             {
@@ -67,46 +66,46 @@ namespace WebApplication8.Controllers
                     UserName = User.Identity.Name,
                     Type = FileType.Folder
                 });
-                
+
             }
             _context.SaveChanges();
             Console.WriteLine(folderpath.Replace("/", "-"));
-            return RedirectToAction("Index",new { path=folderpath});
+            return RedirectToAction("Index", new { path = folderpath });
         }
         [HttpPost]
-        public async Task<IActionResult> AddFile(IFormFile uploadedFile,string Path)
+        public async Task<IActionResult> AddFile(IFormFile uploadedFile, string Path)
         {
             if (uploadedFile != null)
             {
-                bool tmp = Directory.Exists(_appEnviroment.WebRootPath + "/Files/" + User.Identity.Name);
+                bool tmp = Directory.Exists(_appEnviroment.WebRootPath + @"\Files\" + User.Identity.Name);
                 if (!tmp)
-                    Directory.CreateDirectory(_appEnviroment.WebRootPath + "/Files/" + User.Identity.Name);
-                string filepath = _appEnviroment.WebRootPath + "/Files/" + User.Identity.Name+Path;
-                using (var fileStrem=new FileStream(filepath + uploadedFile.Name, FileMode.Create))
+                    Directory.CreateDirectory(_appEnviroment.WebRootPath + @"\Files\" + User.Identity.Name);
+                string filepath = _appEnviroment.WebRootPath + @"\Files\" + User.Identity.Name + Path;
+                using (var fileStrem = new FileStream(filepath + uploadedFile.FileName, FileMode.Create))
                 {
                     await uploadedFile.CopyToAsync(fileStrem);
                     _context.Files.Add(new FileModel
                     {
                         Name = uploadedFile.FileName,
-                        Type=FileType.File,
-                        UserName=User.Identity.Name,
-                        Path= Path
-
+                        Type = FileType.File,
+                        UserName = User.Identity.Name,
+                        Path = Path
+                        
                     });
                     _context.SaveChanges();
-                  
+
 
                 }
 
             }
-            return RedirectToAction("Index", new { path = Path});
+            return RedirectToAction("Index", new { path = Path });
         }
-        public IActionResult PostReport(string FileId,string Path,string ReportTheme, string ReportBody)
+        public IActionResult PostReport(string FileId, string Path, string ReportTheme, string ReportBody)
         {
             FileModel model = _context.Files.First(file => file.Id == Int32.Parse(FileId));
             _context.Reports.Add(new Report
             {
-                UserName=User.Identity.Name,
+                UserName = User.Identity.Name,
                 Theme = ReportTheme,
                 ReportDate = DateTime.Now,
                 Body = ReportBody,
@@ -115,17 +114,17 @@ namespace WebApplication8.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index", new { path = Path });
         }
-        public IActionResult MakeShared(int FileId,string Path)
+        public IActionResult MakeShared(int FileId, string Path)
         {
             FileModel file = _context.Files.First(file => file.Id == FileId);
-           // SharedFolder sharedFolder = new SharedFolder { Folder = file, SharedPath = Path };
+            ApplicationUser user = _userctx.Users.First(user => user.NormalizedUserName == User.Identity.Name);
+            SharedFolder sharedFolder = new SharedFolder { Folder = file, SharedPath = Path ,OwnerId=user.Id };
+            _context.SharedFolders.Add(sharedFolder);
+            _context.SaveChanges();
             return RedirectToAction("Index", new { path = Path });
         }
-        [HttpGet]
-        public ActionResult GetFiles()
-        {
-            string Path = "/";
-            return PartialView("_FileListPartial", _context.Files.Where(file => file.UserName == User.Identity.Name && file.Path == Path));
-        }
-    }
+       
+
+
+    } 
 }

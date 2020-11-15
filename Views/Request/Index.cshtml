@@ -5,3 +5,55 @@
     ViewData["Title"] = "Home Page";
     Layout = "~/Views/Shared/_MainLayout.cshtml";
 }
+    <ul class="list-group" id="requests">
+        @foreach (var request in Model)
+        {
+
+            <li class="list-group-item">
+                <div class="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <i class="fa fa-folder"></i>
+                    <!-- <partial name="_RefPartial" model="file" />-->
+                    <h6>From @request.From.UserName on @request.Folder.Name     Data:@request.Date</h6>
+
+
+
+                </div>
+                <div class="pull-right">
+
+                    <!-- Модальное окно -->
+                    <!-- Button trigger modal -->
+                    <form asp-controller="Request" asp-action="Accept">
+                        <input value=@request.Id name="id" hidden />
+                    <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                        @Localizer["Accept"]
+                    </button>
+                        </form>
+                    <form asp-controller="Request" asp-action="Deny">
+                        <input value=@request.Id name="id" hidden />
+                        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            @Localizer["Deny"]
+                        </button>
+                    </form>
+
+                    <!-- Modal -->
+
+                </div>
+            </li>
+        }
+    </ul>
+    <script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+<script>
+    const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl("/mail")
+        .build();
+    hubConnection.on("Recieve", function (msg) {
+        var ul = document.getElementById("requests");
+        var li = document.createElement("li");
+        li.innerHTML = " <i class='fa fa - folder'></i>" + "<h6>" + msg.From + "   on" + msg.FolderName + "</h6>";
+
+        ul.appendChild();
+    })
+    hubConnection.start();
+
+</script>

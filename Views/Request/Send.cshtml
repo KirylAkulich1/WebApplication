@@ -1,0 +1,66 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@model IEnumerable<AddRequest>
+@inject IViewLocalizer Localizer
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+<div class="panel-body">
+
+    <ul class="list-group">
+        @foreach (var request in Model)
+        {
+
+            <li class="list-group-item">
+
+                <i class="fa fa-folder"></i>
+                <!--  @if (request.Accepted)
+                  {
+                      <i class="fa fa-check"></i>
+                  }
+                  @if (!request.Accepted)
+                  {
+                      <i class="fa fa-ban" />
+                  }
+                  -->
+
+                <h6>@request.To.UserName      Data:@request.Date</h6>
+
+
+
+
+                <div class="pull-right">
+
+                    <form asp-controller="Request" asp-action="Accept">
+                        <input value=@request.Id name="id" hidden />
+                        <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            @Localizer["Delete"]
+                        </button>
+                    </form>
+                </div>
+            </li>
+        }
+    </ul>
+    <form asp-action="Add" asp-route-id=@ViewBag.currentId>
+        <input id="destUser" name="userName" placeholder="Target User" />
+        <button type="submit" id="sendBtn">
+            Send
+        </button>
+    </form>
+</div>
+<script src="~/js/signalr/dist/browser/signalr.min.js"></script>
+<script>
+    const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl("/mail")
+        .build();
+    let req = "";
+
+    document.getElementById("sendBtn").addEventListener("click", function (e) {
+        let userName = document.getElementById("destUser").value;
+        let folderName =@ViewBag.currentFile
+            hubConnection.invoke("Recieve", { "To": userName, "FolderName": FolderName })
+    }
+    );
+    hubConnection.start();
+
+</script>

@@ -23,26 +23,39 @@ namespace WebApplication8.Controllers
     {
 
         private readonly ILogger<HomeController> _logger;
-        private readonly DataContext _context;
+       
         private readonly IHttpContextAccessor _ctx;
         private readonly IWebHostEnvironment _appEnviroment;
-        private readonly ApplicationDbContext _userctx;
+        private readonly ApplicationDbContext _context;
         private readonly MailMetaData _notificationMetadata;
-        public CommonController(ILogger<HomeController> logger, DataContext context,
+        public CommonController(ILogger<HomeController> logger, 
             IHttpContextAccessor httpContextAccessor, IWebHostEnvironment appEnviroment, ApplicationDbContext userctx,MailMetaData _notification)
         {
             _logger = logger;
-            _context = context;
+
             _ctx = httpContextAccessor;
             _appEnviroment = appEnviroment;
-            _userctx = userctx;
+            _context = userctx;
             _notificationMetadata = _notification;
         }
-        public IActionResult Index()
+        /*
+        public IActionResult Index(string user)
         {
-            Get();
-            return View(_context.SharedFolders.Where(folder=>folder.SharedPath=="/shared").Include("Folder"));
-        }
+            if (user == null)
+                user = User.Identity.Name;
+            ApplicationUser currUser = (ApplicationUser)_userctx.Users.First(user => user.UserName == User.Identity.Name);
+            if (user == User.Identity.Name)
+                return View(_context.SharedFolders.Include("Folder").Where(folder => folder.UserName == user));
+            else
+            {
+       
+                return View(_context.SharedFolders.
+                    Where(folder => folder.UserName == user).
+                    Include("Users").
+                    Where(folder => folder.Users.Contains(currUser)));
+
+            }
+        }*/
         public IActionResult AddShared(string foldername)
         {
             if (!Directory.Exists(_appEnviroment.WebRootPath + "/Files/" + User.Identity.Name + "/Shared"))
@@ -51,44 +64,33 @@ namespace WebApplication8.Controllers
             FileModel fileModel = new FileModel { UserName = User.Identity.Name, Name = foldername, Type = FileType.Folder, Path =filepath };
             _context.SharedFolders.Add(new SharedFolder
             {
-                UserName = User.Identity.Name,
+                OwnerId = User.Identity.Name,
                 Folder = fileModel,
                 SharedPath = "/shared",
 
             });
             _context.SaveChanges();
-            Get();
+           // Get();
             return RedirectToAction("Index");
         }
-        private MimeMessage CreateMimeMessageFromEmailMessage(EmailMessage message)
+        public IActionResult AddUser(string username,string sharedid)
         {
-            var mimeMessage = new MimeMessage();
-            mimeMessage.From.Add(message.Sender);
-            mimeMessage.To.Add(message.Reciever);
-            mimeMessage.Subject = message.Subject;
-            mimeMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text)
-            { Text = message.Content };
-            return mimeMessage;
-        }
-        public string Get()
-        {
-            EmailMessage message = new EmailMessage();
-            message.Sender = new MailboxAddress("Self", _notificationMetadata.Sender);
-            message.Reciever = new MailboxAddress("Self", _notificationMetadata.Reciever);
-            message.Subject = "Welcome";
-            message.Content = "Hello World!";
-            var mimeMessage = CreateMimeMessageFromEmailMessage(message);
-            using (SmtpClient smtpClient = new SmtpClient())
+            var fromUser = _context.Users.First(p => p.UserName == username);
+            var toUser = _context.Users.First(p => p.UserName == User.Identity.Name);
+            _context.AddRequests.Add(new AddRequest
             {
-//                smtpClient.SslProtocols = SslProtocols.Ssl3 | SslProtocols.Tls | SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Tls13;
-
-                smtpClient.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-                smtpClient.Authenticate(_notificationMetadata.UserName,
-                _notificationMetadata.Password);
-                smtpClient.Send(mimeMessage);
-                smtpClient.Disconnect(true);
-            }
-            return "Email sent successfully";
+                ToId=toUser.Id,
+                FromId=fromUser.Id,
+                Date=DateTime.Now,
+                FolderId=Int32.Parse(sharedid)
+            });
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        public IActionResult About(int id)
+        {
+            SharedFolder folder = _context.SharedFolders.Include("Users").First(folder=>folder.Id==id);
+            return View(folder);
         }
     }
     

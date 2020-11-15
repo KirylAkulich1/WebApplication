@@ -10,22 +10,28 @@
                 {
                     <i class="fa fa-folder"></i>
                     <partial name="_RefPartial" model="file" /> <h6>             @file.Path</h6>
+                     <div class="pull-right">
+                            <a class="fa fa-share" asp-controller="Home" asp-action="MakeShared" asp-route-Path=@ViewBag.CurrentPath asp-route-FileId=@file.Id></a>
+                       
+                     </div>
 
                 }
                 else
                 {
                     <i class="fa fa-file"></i>
-                    <a>@file.Name</a>
+                    <a asp-controller="Download" asp-action="GetFile" asp-route-name=@file.Name
+                       asp-route-path=@file.Path>@file.Name</a>
+                    <!--<form asp-controller="Home" asp-action="Download">
+                        <input name="Path" value=@ViewBag.CurrentPath hidden />
+                        <input name="FileId" value=@file.Id hidden />
+                        <button type="button" class="btn btn-primary">
+                            <i class="fa fa-share" aria-hidden="true"></i>
+                        </button>
+                    </form>-->
                 }
             </div>
             <div class="pull-right">
-                <form asp-controller="Home" asp-action="MakeShared">
-                    <input name="Path" value=@ViewBag.CurrentPath hidden />
-                    <input name="FileId" value=@file.Id hidden />
-                    <button type="button" class="btn btn-primary">
-                        <i class="fa fa-share" aria-hidden="true"></i>
-                    </button>
-                </form>
+    
                 <i id="flag" class="fa fa-trash"></i>
 
                 <!-- Модальное окно -->

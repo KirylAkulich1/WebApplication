@@ -9,12 +9,11 @@ namespace WebApplication8.Controllers
 {
     public class AdminController : Controller
     {
-        private readonly DataContext _context;
-        private readonly ApplicationDbContext _userctx;
-        public AdminController(DataContext context,ApplicationDbContext usercontext)
+        private readonly ApplicationDbContext _ctx;
+        public AdminController(ApplicationDbContext usercontext)
         {
-            _context = context;
-            _userctx = usercontext;
+           
+            _ctx = usercontext;
         }
         public IActionResult Index()
         {
@@ -31,7 +30,7 @@ namespace WebApplication8.Controllers
         public IActionResult Reports(int id)
         {
 
-            return View(_context.Reports);
+            return View(_ctx.Reports);
         }
     }
 }

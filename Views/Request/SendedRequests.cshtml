@@ -1,0 +1,15 @@
+﻿@model IEnumerable<AddRequest>
+
+    <ul class="list-group">
+        @foreach (var request in Model)
+        {
+
+            <li class="list-group-item">
+                @request.To     @request.Date  @request.Folder
+                <div class="pull-right">
+
+                    <i id="flag" class="fa fa-trash"></i>
+                </div>
+            </li>
+        }
+    </ul>

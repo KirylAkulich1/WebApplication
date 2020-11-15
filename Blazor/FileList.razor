@@ -175,9 +175,9 @@
     [Inject]
     private ApplicationDbContext dbContext { get; set; }
     [Inject]
-    UserManager<IdentityUser> userManager { get; set; }
+    UserManager<ApplicationUser> userManager { get; set; }
     [Inject]
-    SignInManager<IdentityUser> signInManager { get; set; }
+    SignInManager<ApplicationUser> signInManager { get; set; }
 
     string currentUserName { get; set; }
     string currentPath { get; set; } = "/";
@@ -267,7 +267,7 @@
                 Name = FolderName,
                 Type = FileType.Folder,
                 Path = currentPath,
-               // UserName = httpContextAccessor.HttpContext.User.Identity.Name
+                // UserName = httpContextAccessor.HttpContext.User.Identity.Name
             });
             dataContext.SaveChanges();
         }

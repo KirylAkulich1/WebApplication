@@ -16,6 +16,10 @@ using Microsoft.AspNetCore.Http;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using WebApplication8.Models.Mails;
+using WebApplication8.Models;
+using Microsoft.AspNetCore.SignalR;
+using WebApplication8.Providers;
+using WebApplication8.Hubs;
 
 namespace WebApplication8
 {
@@ -37,7 +41,7 @@ namespace WebApplication8
             services.AddDbContext<DataContext>(options=>
              options.UseSqlServer(
                     Configuration.GetConnectionString("AppConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
            
             services.AddControllersWithViews()
@@ -49,7 +53,8 @@ namespace WebApplication8
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             var MailMetadata = Configuration.GetSection("MailMatadata").Get<MailMetaData>();
             services.AddSingleton(MailMetadata);
-          
+            services.AddSignalR();
+            services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -100,6 +105,7 @@ namespace WebApplication8
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapRazorPages();
                 endpoints.MapBlazorHub();
+                endpoints.MapHub<MessageHub>("/mail");
             });
         }
     }

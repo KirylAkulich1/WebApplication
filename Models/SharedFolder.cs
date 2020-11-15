@@ -10,8 +10,9 @@ namespace WebApplication8.Models
         public int Id { get; set; }
         public FileModel Folder { get; set; }
         public string SharedPath { get; set; }
-        public ICollection<IdentityUser>    Users   {get;set;}
-        public String UserName { get; set; }
+        public ICollection<FolderUser> folderUsers { get; set; }
+        public string OwnerId { get; set; }
+        public ApplicationUser Owner { get; set; }
        
     }
 }

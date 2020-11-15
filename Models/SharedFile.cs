@@ -9,6 +9,6 @@ namespace WebApplication8.Models
     {
         public int Id { get; set; }
         public FileModel FModel { get; set; }
-        ICollection <IdentityUser> Users { get; set; }
+        ICollection<ApplicationUser> Users { get; set; }
     }
 }

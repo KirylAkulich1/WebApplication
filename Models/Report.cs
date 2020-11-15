@@ -12,7 +12,7 @@ namespace WebApplication8.Models
         public int Id { get; set; }
         public DateTime ReportDate;
         public string UserName { get; set; }
-        public IdentityUser IdentityUser { get; set; }
+        public ApplicationUser IdentityUser { get; set; }
         public FileModel File { get; set; }
         public string Theme { get; set; }
         public string Body { get; set; }

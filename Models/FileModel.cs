@@ -17,7 +17,7 @@ namespace WebApplication8.Models{
         public string Path{get;set;}
         public FileType Type{get;set;}
         public string UserName { get; set; }
-        public IdentityUser IdentityUser { get; set; }
+        public ApplicationUser IdentityUser { get; set; }
 
     }
 }
